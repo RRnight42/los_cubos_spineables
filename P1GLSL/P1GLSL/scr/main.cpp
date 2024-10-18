@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <vector>
 using namespace IGlib;
 using namespace std;
 using namespace glm;
@@ -27,6 +28,7 @@ float rotationSpeed = 0.05f;
 
 //Camara con el raton
 
+vector<vec3> pathBezier; //path de 12 puntos de control para un bezier orbital
 
 
 
@@ -77,6 +79,40 @@ int main(int argc, char** argv)
 	obj3Id = createObj(cubeNTriangleIndex, cubeNVertex, cubeTriangleIndex,
 		cubeVertexPos, cubeVertexColor, cubeVertexNormal, cubeVertexTexCoord, cubeVertexTangent);
 
+
+
+
+
+	// Inicialización de puntos de control para la curva Bezier
+	//se podria hacer un metodo que implemente un switch para poder elegir el eje que querais ver la rotacion de bezier
+	
+	pathBezier.push_back(vec3(3, 0, 0));     // P0
+	pathBezier.push_back(vec3(1.5, 2.6, 0)); // P1
+	pathBezier.push_back(vec3(2.6, 1.5, 0));     // P2
+	pathBezier.push_back(vec3(0, 3, 0));// P3
+
+	pathBezier.push_back(vec3(0, 3, 0));    // P4
+	pathBezier.push_back(vec3(-1.5, 2.6, 0));// P5
+	pathBezier.push_back(vec3(-2.6, 1.5 , 0));    // P6
+	pathBezier.push_back(vec3(-3, 0, 0)); // P7
+
+	pathBezier.push_back(vec3(-3, 0, 0));  // P8
+	pathBezier.push_back(vec3(-2.6, -1.5, 0.5));    // P9
+	pathBezier.push_back(vec3(-1.5, -2.6, 0.5)); // P10
+	pathBezier.push_back(vec3(0, -3, 0));// P11
+
+	pathBezier.push_back(vec3(0 , -3 ,0));  // P12
+	pathBezier.push_back(vec3(1.5, -2.6, 0));  // P13
+	pathBezier.push_back(vec3(2.6, -1.5, 0));  // P14
+	pathBezier.push_back(vec3(3, 0, 0));       // P0 (para cerrar la curva)
+
+
+	
+
+
+	
+
+
 	//una matriz por objeto
 	mat4 modelMat = mat4(1.0f);
 	mat4 model2Mat = mat4(1.0f);
@@ -85,6 +121,14 @@ int main(int argc, char** argv)
 	setModelMat(objId, modelMat);
 
 	setModelMat(obj2Id, model2Mat);
+
+	mat4 modelView1 = view * modelMat;
+
+//añadimos los puntos de control de bezier
+
+	pathBezier.push_back(vec3());
+
+
 
 	//Incluir texturas aquí.
 
@@ -105,11 +149,11 @@ int main(int argc, char** argv)
 }
 
 // hemos creado un metodo que permite devolver una matriz de rotacion en el eje Y 
-glm::mat4 createRotationMatrix(char axis, float angle)
+mat4 createRotationMatrix(char axis, float angle)
 {
 	float cosAngle = cos(angle);
 	float sinAngle = sin(angle);
-	glm::mat4 rot = glm::mat4(1.0f);  // Matriz identidad
+	mat4 rot = mat4(1.0f);  // Matriz identidad
 
 	switch (axis)
 	{
@@ -160,53 +204,6 @@ mat4 orbitalSpinAxis(char axis, float angle , float orbitRadius) {
 vec3 bezierCalc(float t, vec3 P0, vec3 P1, vec3 P2, vec3 P3) {
 
 	
-
-
-}
-
-
-mat4 orbitalBezier(char axis, float t) {
-
-	mat4 modelBezier = mat4(1.0f);
-
-	// Puntos de control
-	vec3 P0, P1, P2, P3;
-	vec3 arrayPuntos[]; // superior a 4 y par (obligatorio)
-
-	switch (axis) {
-	case 'X':  
-		// Eje X: órbita circular en el plano YZ
-		P0 = vec3(0.0f, -orbitRadius, -orbitRadius);
-		P1 = vec3(0.0f, -orbitRadius, orbitRadius);
-		P2 = vec3(0.0f, orbitRadius, -orbitRadius);
-		P3 = vec3(0.0f, orbitRadius, orbitRadius);
-		break;
-	case 'Y':  // Eje Y: órbita circular en el plano XZ
-		P0 = vec3(-orbitRadius, 0.0f, -orbitRadius);
-		P1 = vec3(orbitRadius, 0.0f, -orbitRadius);
-		P2 = vec3(-orbitRadius, 0.0f, orbitRadius);
-		P3 = vec3(orbitRadius, 0.0f, orbitRadius);
-		break;
-	case 'Z':  // Eje Z: órbita circular en el plano XY
-		P0 = vec3(-orbitRadius, -orbitRadius, 0.0f);
-		P1 = vec3(orbitRadius, -orbitRadius, 0.0f);
-		P2 = vec3(-orbitRadius, orbitRadius, 0.0f);
-		P3 = vec3(orbitRadius, orbitRadius, 0.0f);
-		break;
-	default:
-		// Si el eje no es correcto, volvemos al caso por defecto
-		P0 = vec3(orbitRadius, 0.0f, 0.0f);
-		P1 = vec3(orbitRadius, 0.0f, 0.0f);
-		P2 = vec3(orbitRadius, 0.0f, 0.0f);
-		P3 = vec3(orbitRadius, 0.0f, 0.0f);
-		break;
-		
-	}
-/*
-	int tfloored = floor(t);
-	float tdecimal = ;
-*/
-	// precalcular valores de la ecuación de bezier
 	float t2 = t * t;
 	float t3 = t2 * t;
 	float UMT = 1.0f - t;     // Uno Menos T >> UMT
@@ -214,22 +211,32 @@ mat4 orbitalBezier(char axis, float t) {
 	float UMT3 = UMT2 * UMT;  // cubo UMT
 
 	// Fórmula de la curva Bezier cúbica
-	vec3 bezier = (UMT3 * P0) + (3 * UMT2 * t * P1) + (3 * UMT * t2 * P2) + (t3 * P3);
+	vec3 bezierPoint = (UMT3 * P0) + (3 * UMT2 * t * P1) + (3 * UMT * t2 * P2) + (t3 * P3);
 
-	// Asignamos la posición calculada en la matriz
-	modelBezier[3][0] = bezier.x;
-	modelBezier[3][1] = bezier.y;
-	modelBezier[3][2] = bezier.z;
-
-	
-	// Rotación alrededor del eje especificado
-	modelBezier = createRotationMatrix(axis, angle) * modelBezier;
-	//modelBezier = createRotationMatrix(axis, angle) * modelBezier;
-
-	return modelBezier;
-
+	return bezierPoint;
 
 }
+
+
+vec3 orbitalBezier(float t, vector<vec3> arrayPuntos) {
+
+		int numCurves = (arrayPuntos.size() - 1) / 3;  // Cada curva usa 4 puntos de control
+		float normalizedT = fmod(t, 1.0f) * numCurves;  // Normalizar t en el rango de la curva
+
+		int i = floor(normalizedT);  
+		float localT = normalizedT - i;  
+
+		int baseIndex = i * 3;
+
+		// Evitar salirse del rango de puntos de control
+		if (baseIndex + 3 >= arrayPuntos.size()) {
+			baseIndex = arrayPuntos.size() - 4;
+		}
+
+		return bezierCalc(localT, arrayPuntos[baseIndex], arrayPuntos[baseIndex + 1], arrayPuntos[baseIndex + 2], arrayPuntos[baseIndex + 3]);
+	}
+
+
 
 mat4 createViewMatrix(vec3 CoP, vec3 LookAt, vec3 VUP){
 
@@ -304,23 +311,28 @@ void resizeFunc(int width, int height)
 void idleFunc()
 {
 	static float angle = 0;
+	static float t = 0;
 	angle = (angle < (pi<float>() * 2)) ? angle + 0.01f : 0.0f;
+
+	t += 0.001f;
 
 	// ESTE rot ES EL QUE VIMOS EN CLASE , NO ES ILEGAL
 	mat4 rot = rotate(mat4(1.0f), angle, vec3(1.0f, 1.0f, 0.0f));
-
-	mat4 orbitaBezier = orbitalBezier('Z', 0.7f,angle,1.0f);
+	
 	// Como rota sobre el eje Y , cambiamos la componentes XZ y dejamos la Y a 0
 	mat4 rot2 = createRotationMatrix('Y', angle);
 	mat4 rot3 = createRotationMatrix('X', angle);
 
 	mat4 orbita = orbitalSpinAxis('Y', angle , 3.0f);
 
-	
+	vec3 orbitaBezier = orbitalBezier(t, pathBezier);
+	mat4 bezierTranslate = translate(mat4(1.0f),orbitaBezier);
 
 	setModelMat(objId, rot);
 	setModelMat(obj2Id, orbita * rot2);
-	setModelMat(obj3Id, orbitaBezier * rot3);
+
+	//bezier
+	setModelMat(obj3Id, bezierTranslate * rot3);
 
 }
 
@@ -398,7 +410,7 @@ void mouseFunc(int button, int state, int x, int y)
 	else
 		cout << "Se ha soltado el botón ";
 
-	if (button == 0) mouseFunc(x ,y);
+	if (button == 0) cout << "izquierda raton" << endl;
 	if (button == 1) cout << "central del ratón " << endl;
 	if (button == 2) cout << "de la derecha del ratón " << endl;
 
@@ -412,8 +424,7 @@ void mouseFunc(int button, int state, int x, int y)
 
 void mouseMotionFunc(int x, int y)
 {
-	// camara orbital
-	//rotar los vectores respecto a un punto (miriar con gepeto)
+	
 
 }
 
