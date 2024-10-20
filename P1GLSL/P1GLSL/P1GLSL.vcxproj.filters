@@ -25,28 +25,28 @@
     <None Include="..\shaders_P1\shader_allvariables.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="..\shaders_P1\shader.v0.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="..\shaders_P1\shader.v0.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="..\shaders_P1\shader.v3.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="..\shaders_P1\shader.v2.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="..\shaders_P1\shader.v1.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="..\shaders_P1\shader.v3.frag">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="..\shaders_P1\shader.v7.frag">
       <Filter>shaders</Filter>
     </None>
     <None Include="..\shaders_P1\shader.v7.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader.p1.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader.p1.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader_discard_0.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader_discard_0.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader_IDs.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders_P1\shader_IDs.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

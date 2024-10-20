@@ -1,15 +1,15 @@
 ﻿cl : línea de comandos  warning D9035: La opción 'Gm' está desusada y se quitará en próximas versiones
   main.cpp
-C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(63,14): warning C4305: '=': truncamiento de 'double' a 'T'
+C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(65,14): warning C4305: '=': truncamiento de 'double' a 'T'
           with
           [
               T=float
           ]
-C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(64,14): warning C4305: '=': truncamiento de 'double' a 'T'
+C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(66,14): warning C4305: '=': truncamiento de 'double' a 'T'
           with
           [
               T=float
           ]
-C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(226,9): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(232,21): warning C4018: '>=': no coinciden signed/unsigned
+C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(218,9): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\scr\main.cpp(224,21): warning C4018: '>=': no coinciden signed/unsigned
   P1GLSL.vcxproj -> C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P1GLSL\P1GLSL\Debug\P1GLSL.exe

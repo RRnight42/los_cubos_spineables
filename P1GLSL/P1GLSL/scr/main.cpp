@@ -43,13 +43,15 @@ void mouseMotionFunc(int x, int y);
 int main(int argc, char** argv)
 {
 	locale::global(locale("spanish"));// acentos ;)
-	if (!init("../shaders_P1/shader.p1.vert", "../shaders_P1/shader.p1.frag"))
+
+	// Descomentar y comentar los diferentes archivos para ver los resultados de los shaders
+
+	//if(!init("../shaders_P1/shader_IDs.vert", "../shaders_P1/shader_IDs.frag"))
+	if(!init("../shaders_P1/shader_discard_0.vert", "../shaders_P1/shader_discard_0.frag"))
 		return -1;
 
 	//Se ajusta la cámara
 	//Si no se da valor se cojen valores por defecto
-
-
 
 	float n = 1.;
 	float f = 10.;
@@ -90,27 +92,15 @@ int main(int argc, char** argv)
 	pathBezier.push_back(vec3(1.5, 2.6, 0)); // P1
 	pathBezier.push_back(vec3(2.6, 1.5, 0));     // P2
 	pathBezier.push_back(vec3(0, 3, 0));// P3
-
-	pathBezier.push_back(vec3(0, 3, 0));    // P4
-	pathBezier.push_back(vec3(-1.5, 2.6, 0));// P5
-	pathBezier.push_back(vec3(-2.6, 1.5 , 0));    // P6
-	pathBezier.push_back(vec3(-3, 0, 0)); // P7
-
-	pathBezier.push_back(vec3(-3, 0, 0));  // P8
-	pathBezier.push_back(vec3(-2.6, -1.5, 0.5));    // P9
-	pathBezier.push_back(vec3(-1.5, -2.6, 0.5)); // P10
-	pathBezier.push_back(vec3(0, -3, 0));// P11
-
-	pathBezier.push_back(vec3(0 , -3 ,0));  // P12
-	pathBezier.push_back(vec3(1.5, -2.6, 0));  // P13
-	pathBezier.push_back(vec3(2.6, -1.5, 0));  // P14
+	pathBezier.push_back(vec3(-1.5, 2.6, 0));// P4
+	pathBezier.push_back(vec3(-2.6, 1.5 , 0));    // P5
+	pathBezier.push_back(vec3(-3, 0, 0)); // P6
+	pathBezier.push_back(vec3(-2.6, -1.5, 0.5));    // P7
+	pathBezier.push_back(vec3(-1.5, -2.6, 0.5)); // P8
+	pathBezier.push_back(vec3(0, -3, 0));// P9
+	pathBezier.push_back(vec3(1.5, -2.6, 0));  // P10
+	pathBezier.push_back(vec3(2.6, -1.5, 0));  // P11
 	pathBezier.push_back(vec3(3, 0, 0));       // P0 (para cerrar la curva)
-
-
-	
-
-
-	
 
 
 	//una matriz por objeto
@@ -124,15 +114,18 @@ int main(int argc, char** argv)
 
 	mat4 modelView1 = view * modelMat;
 
-//añadimos los puntos de control de bezier
-
-	pathBezier.push_back(vec3());
 
 
 
 	//Incluir texturas aquí.
-
-	addColorTex(objId, "../img/gradient.png");
+	//Puedes elegir que textura quieres ver : Comenta y descomenta
+	
+	//addColorTex(objId, "../img/color.png");
+	//addColorTex(objId, "../img/BW.png");
+	//addColorTex(objId, "../img/BW_reversed.png");
+	addColorTex(objId, "../img/esferas.png");
+	//addColorTex(objId, "../img/estrellas.png");
+	//addColorTex(objId, "../img/gradient.png");
 
 	//CBs
 	setResizeCB(resizeFunc);
