@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 
 
-	if (!init("../shaders_P2/shader_apartado_1.vert", "../shaders_P2/shader_apartado_1.frag"))
+	if (!init("../shaders_P2/shader_apartado_1.vert", "../shaders_P2/shader_luz_direccional.frag"))
 	//if (!init("../shaders_P2/shader_apartado_2.vert", "../shaders_P2/shader_apartado_2.frag"))
 	//if (!init("../shaders_P2/shader_apartado_3.vert", "../shaders_P2/shader_apartado_3.frag"))
 		return -1;
