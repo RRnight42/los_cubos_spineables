@@ -13,15 +13,6 @@ using namespace IGlib;
 int objId =-1;
 
 
-
-
-
-
-
-
-
-
-
 vec3 COP = vec3(0.0f, 0.0f, 6.0f);
 vec3 LookAt = vec3(0.0f, 0.0f, -1.0f);
 vec3 VUP = vec3(0.0f, 1.0f, 0.0f);
@@ -37,7 +28,29 @@ void idleFunc();
 void keyboardFunc(unsigned char key, int x, int y);
 void mouseFunc(int button, int state, int x, int y);
 void mouseMotionFunc(int x, int y);
+mat4 createViewMatrix(vec3 CoP, vec3 LookAt, vec3 VUP) {
 
+	vec3 N = normalize(LookAt - CoP);  // Vector que apunta desde CoP hacia LookAt
+	vec3 V = normalize(cross(N, VUP));  // Eje derecha
+	vec3 U = normalize(cross(V, N));    // Eje arriba ajustado
+
+	// Matriz de rotación de la cámara
+
+	mat4 rotation = mat4(1.0f);
+	rotation[0] = vec4(V, 0.0f);  // Eje V como primera fila
+	rotation[1] = vec4(U, 0.0f);  // Eje U como segunda fila
+	rotation[2] = vec4(-N, 0.0f); // -N como tercera fila (cámara mira en la dirección -Z)
+
+
+	mat4 traslacion = mat4(1.0f);
+
+	traslacion[3][0] = -COP.x;
+	traslacion[3][1] = -COP.y;
+	traslacion[3][2] = -COP.z; // Traslación inversa según posición CoP
+
+	// Multiplicamos rotación y traslación para obtener la matriz de vista
+	return rotation * traslacion;
+}
 
 mat4 createRotationMatrix(char axis, float angle)
 {
@@ -77,7 +90,13 @@ mat4 createRotationMatrix(char axis, float angle)
 int main(int argc, char** argv)
 {
 	locale::global(locale("spanish"));// acentos ;)
-	if (!init("../shaders_P2/shader.v2.vert", "../shaders_P2/shader.v2.frag"))
+
+
+
+
+	if (!init("../shaders_P2/shader_apartado_1.vert", "../shaders_P2/shader_apartado_1.frag"))
+	//if (!init("../shaders_P2/shader_apartado_2.vert", "../shaders_P2/shader_apartado_2.frag"))
+	//if (!init("../shaders_P2/shader_apartado_3.vert", "../shaders_P2/shader_apartado_3.frag"))
 		return -1;
   //Se ajusta la cámara
 	//Si no se da valor se cojen valores por defecto
@@ -95,8 +114,8 @@ int main(int argc, char** argv)
 	proj[2].w = -1.0f;
 	proj[3].z = (2.0f * far * near) / (near - far);
 	proj[3].w = 0.0f;
-	IGlib::setProjMat(proj);
-	IGlib::setViewMat(view);
+	setProjMat(proj);
+	setViewMat(view);
 
 	//Creamos el objeto que vamos a visualizar
 	objId = createObj(cubeNTriangleIndex, cubeNVertex, cubeTriangleIndex, 
@@ -110,7 +129,7 @@ int main(int argc, char** argv)
 	setModelMat(objId, modelMat);
 	
 	//CBs
-	IGlib::setIdleCB(idleFunc);
+	setIdleCB(idleFunc);
 	setResizeCB(resizeFunc);
 	setKeyboardCB(keyboardFunc);
 	setMouseCB(mouseFunc);
@@ -122,11 +141,41 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-void resizeFunc(int width, int height)
-{
-	//Ajusta el aspect ratio al tamaño de la venta
+
+
+mat4 createProjMatrix(int width, int height, float anguloApertura) {
+
+	// Ajusta el aspect ratio al tamaño de la ventana
+
+	float aspectRatio = (float)width / (float)height;
+
+	float apertura = anguloApertura * (pi<float>() / 180);
+
+
+
+
+	//Mismos calculos de la matriz de proyeccion , pero cambiamos las componentes [0][0] , [1][1] : adaptamos el calculo del ratio
+
+	float n = 1.;
+	float f = 10.;
+
+	mat4 proj = mat4(0.0);
+
+	proj[0].x = 1.0f / (aspectRatio * tan(apertura / 2.0f));
+	proj[1].y = 1.0f / tan(apertura / 2.0f);
+	proj[2][2] = (f + n) / (n - f);
+	proj[2][3] = -1.f;
+	proj[3].z = 2.f * f * n / (n - f);
+
+
+	return proj;
+
 }
 
+void resizeFunc(int width, int height)
+{
+	setProjMat(createProjMatrix(width, height, 45.0f));
+}
 void idleFunc()
 {
 	mat4 modelMat(1.0f);
@@ -136,6 +185,14 @@ void idleFunc()
 	modelMat = rotate(modelMat, angle, vec3(1.0f, 1.0f, 0.0f));
 
 	setModelMat(objId, modelMat);
+}
+
+
+void updateViewMatrix()
+{
+	//prohibido usar lookAt
+	mat4 view = createViewMatrix(COP, LookAt, VUP);
+	setViewMat(view);
 }
 
 void keyboardFunc(unsigned char key, int x, int y)
@@ -192,6 +249,8 @@ void keyboardFunc(unsigned char key, int x, int y)
 	}
 	break;
 	}
+
+	updateViewMatrix();
 }
 
 void mouseFunc(int button, int state, int x, int y)
