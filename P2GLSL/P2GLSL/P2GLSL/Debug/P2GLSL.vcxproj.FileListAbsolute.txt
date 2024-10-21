@@ -1,2 +1,3 @@
 C:\Users\rober\Downloads\P2GLSL\P2GLSL\P2GLSL\Debug\P2GLSL.exe
 C:\Users\rober\OneDrive\Escritorio\los_cubos_spineables\P2GLSL\P2GLSL\P2GLSL\Debug\P2GLSL.exe
+C:\Users\Warrior\Documents\Repositories\OpenGL\P2GLSL\P2GLSL\P2GLSL\Debug\P2GLSL.exe
